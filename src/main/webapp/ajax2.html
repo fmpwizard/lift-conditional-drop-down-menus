@@ -1,0 +1,10 @@
+<lift:surround with="default" at="content">
+  <center><b>Ajax2 Form Update</b></center>
+  <br >
+  Choose city and state:<br>
+  <lift:snippet type="Ajax2:show" form="post">
+    <div>State: <input class="lift:Ajax2.stateDropDown"></div>
+    City: <select:city></select:city>
+    <select:submit></select:submit>
+  </lift:snippet>
+</lift:surround>

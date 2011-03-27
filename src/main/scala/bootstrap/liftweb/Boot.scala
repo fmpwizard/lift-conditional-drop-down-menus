@@ -43,7 +43,9 @@ class Boot {
     def sitemap = SiteMap(
       Menu.i("Home") / "index" ,
       Menu.i("Ajax Form") / "ajax-form" ,
+      Menu.i("Ajax Form 2") / "ajax2" ,
       Menu.i("Wiring") / "wiring" ,
+      Menu.i("Invoice") / "invoice_wiring",
 
       // more complex because this menu allows anything in the
       // /static path to be visible

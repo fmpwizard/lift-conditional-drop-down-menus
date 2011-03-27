@@ -1,5 +1,3 @@
-package com.fmpwizard.code.snippet
-
 /*
  * Copyright 2007-2010 WorldWide Conferencing, LLC
  *
@@ -16,6 +14,9 @@ package com.fmpwizard.code.snippet
  * limitations under the License.
  */
 
+package com.fmpwizard.code.snippet
+
+
 import _root_.scala.xml._
 import _root_.net.liftweb._
 import http._
@@ -28,41 +29,31 @@ import js._
 import JsCmds._
 import js.jquery._
 
-class Wiring {
+class Ajax2 {
 
-  var state = Wiring.state
+  var state = Ajax2.state
   var city = ""
 
-
-
   def stateDropDown = SHtml.ajaxSelect(
-                  Wiring.states.map(i => (i, i)),
+                  Ajax2.states.map(i => (i, i)),
                   Full(1.toString),
                   selected => {
                     //What to do when you select an entry
-                    Info.cities.set(cityChoice(selected))
+                    replace(selected)
                     state= selected
-                    Noop
                   }
                   )
 
-  def cityDropDown(in: NodeSeq) =
-    WiringUI.toNode(in, Info.cities, JqWiringSupport.fade)((d, ns) => Info.cities)
-
-  private object Info {
-    val cities = ValueCell(cityChoice(state))
-  }
-
   private def cityChoice(state: String): Elem = {
-    val cities = Wiring.citiesFor(state)
+    val cities = Ajax2.citiesFor(state)
     val first = cities.head
     // make the select "untrusted" because we might put new values
     // in the select
     untrustedSelect(cities.map(s => (s,s)), Full(first), s => city = s)
   }
 
-  private def wreplace(state: String): JsCmd = {
-    val cities = Wiring.citiesFor(state)
+  private def replace(state: String): JsCmd = {
+    val cities = Ajax2.citiesFor(state)
     val first = cities.head
     ReplaceOptions("city_select", cities.map(s => (s,s)), Full(first))
   }
@@ -79,7 +70,7 @@ class Wiring {
   }
 }
 
-object Wiring {
+object Ajax2 {
   val citiesAndStates = List("Alabama" -> "Birmingham",
                              "Alabama" -> "Huntsville",
                              "Alabama" -> "Mobile",
