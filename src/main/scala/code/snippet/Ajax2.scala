@@ -39,10 +39,10 @@ class Ajax2 {
                   Full(1.toString),
                   selected => {
                     //What to do when you select an entry
-                    replace(selected)
                     state= selected
+                    replace(selected)
                   }
-                  )
+  )
 
   private def cityChoice(state: String): Elem = {
     val cities = Ajax2.citiesFor(state)
