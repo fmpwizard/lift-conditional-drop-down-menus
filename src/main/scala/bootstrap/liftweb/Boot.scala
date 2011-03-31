@@ -42,9 +42,10 @@ class Boot {
     // Build SiteMap
     def sitemap = SiteMap(
       Menu.i("Home") / "index" ,
-      Menu.i("Ajax Form") / "ajax-form" ,
-      Menu.i("Ajax Form 2") / "ajax2" ,
-      Menu.i("Wiring") / "wiring" ,
+      Menu.i("Ajax Form") / "ajax-form",
+      Menu.i("Ajax Form 2") / "ajax2",
+      Menu.i("Wiring") / "wiring",
+      Menu.i("Wiring2") / "wiring2",
       Menu.i("Invoice") / "invoice_wiring",
 
       // more complex because this menu allows anything in the

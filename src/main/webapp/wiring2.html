@@ -1,0 +1,11 @@
+<lift:surround with="default" at="content">
+  <center><b>Wiring2 Form Update</b></center>
+  <br >
+  Choose city and state:<br>
+  <lift:snippet type="Wiring2:show" form="post">
+    <div>State: <input class="lift:Wiring2.stateDropDown"></div>
+    <div>City: <span class="lift:Wiring2.cityDropDown">Tax</span></div>
+    <div>ID: <span class="lift:Wiring2.idDropDown">Tax</span></div>
+    <select:submit></select:submit>
+  </lift:snippet>
+</lift:surround>
