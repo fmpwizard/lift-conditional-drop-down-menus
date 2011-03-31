@@ -31,7 +31,7 @@ import js.jquery._
 class Wiring2 extends Logger{
 
   var state= CitiesAndStates2.state
-  var city= CitiesAndStates2.
+  var city= ""
   var id= "1"
 
   def stateDropDown = SHtml.ajaxSelect(
