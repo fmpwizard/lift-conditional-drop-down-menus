@@ -11,6 +11,7 @@ class LiftProject(info: ProjectInfo) extends DefaultWebProject(info) {
   // override def scanDirectories = Nil
 
   override def libraryDependencies = Set(
+    "cc.co.scala-reactive" %% "reactive-web" % "0.0.1-SNAPSHOT",
     "net.liftweb" %% "lift-webkit" % liftVersion % "compile->default",
     "net.liftweb" %% "lift-mapper" % liftVersion % "compile->default",
     "org.mortbay.jetty" % "jetty" % "6.1.22" % "test->default",

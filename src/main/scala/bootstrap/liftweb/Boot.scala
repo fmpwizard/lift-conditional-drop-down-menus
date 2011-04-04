@@ -46,6 +46,7 @@ class Boot {
       Menu.i("Ajax Form 2") / "ajax2",
       Menu.i("Wiring") / "wiring",
       Menu.i("Wiring2") / "wiring2",
+      Menu.i("Reactive-web") / "reactive",
       Menu.i("Invoice") / "invoice_wiring",
 
       // more complex because this menu allows anything in the
