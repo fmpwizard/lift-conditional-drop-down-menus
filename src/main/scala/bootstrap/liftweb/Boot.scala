@@ -10,6 +10,8 @@ import sitemap._
 import Loc._
 import mapper._
 
+import reactive._
+import web._
 //import code.model._
 
 
@@ -17,7 +19,7 @@ import mapper._
  * A class that's instantiated early and run.  It allows the application
  * to modify lift's environment
  */
-class Boot {
+class Boot extends Observing{
   def boot {
     if (!DB.jndiJdbcConnAvailable_?) {
       val vendor = 
@@ -79,5 +81,42 @@ class Boot {
 
     // Make a transaction span the whole HTTP request
     S.addAround(DB.buildLoanWrapper)
+
+    //Test for Naftoli
+    import reactive._
+    import web._
+    import html.Select
+    import com.fmpwizard.code.snippet.CitiesAndStates3
+  val statesSelect= Select(Val(CitiesAndStates3.states))
+  statesSelect.selectedIndex.value ()= Some(0)
+
+  val validCitiesSignal= statesSelect.selectedItem map {
+    case None => Nil
+    case Some(state) => CitiesAndStates3.citiesFor(state)
+  }
+
+  val citiesSelect = Select(validCitiesSignal)
+  citiesSelect.selectedIndex.value ()= Some(0)
+
+  val validIdsSignal = citiesSelect.selectedItem.map(_.toList flatMap CitiesAndStates3.idsFor)
+  val idsSelect = Select(validIdsSignal)
+  idsSelect.selectedIndex.value ()= Some(0)
+  idsSelect.selectedIndex.value foreach {i => println("changed to " + i)}
+  println(idsSelect.selectedIndex.value.now)
+
+    println("Id is: %s".format(idsSelect.selectedItem.now))
+    statesSelect.selectedIndex.value()=Some(5)
+    println("Id is: %s".format(idsSelect.selectedItem.now))
+    statesSelect.selectedIndex.value()=Some(0)
+    println("Id is: %s".format(idsSelect.selectedItem.now))
+    println(idsSelect.selectedIndex.value.now)
+    println(citiesSelect.selectedIndex.value.now)
+    citiesSelect.selectedIndex.value()=Some(1)
+    println("Id is: %s".format(idsSelect.selectedItem.now))
+    println(citiesSelect.selectedIndex.value.now)
+    println(idsSelect.selectedIndex.value.now)
+
+
+
   }
 }
