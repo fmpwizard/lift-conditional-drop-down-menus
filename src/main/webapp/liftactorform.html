@@ -1,19 +1,10 @@
 <lift:surround with="default" at="content">
-  <center><b>Lift Actors in action</b></center>
-
-  <div class="lift:PlaceCometOnPage">
-    <div id="result">Here you'll see a message written by the comet actor</div>
-  </div>
+  <center><b>lift Actor in action</b></center>
   <br >
   Choose city and state:<br>
   <lift:snippet type="Liftactorform:show" form="post">
-    <span id="xyz" cometname="default"></span>
     <div>State: <input class="lift:Liftactorform.stateDropDown"></div>
-    <div>City: <span class="lift:Liftactorform.cityDropDown">City</span></div>
+    <div>City: <span class="lift:Liftactorform.cityDropDown">Tax</span></div>
     <select:submit></select:submit>
   </lift:snippet>
-  <br>
-  <p>This example shows you how after you submit a form, you can fire up
-  an actor that will do some background work, and once it is done, it can
-  tell the user the status of that background work.</p>
 </lift:surround>

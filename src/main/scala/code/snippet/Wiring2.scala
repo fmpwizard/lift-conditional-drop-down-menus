@@ -1,5 +1,4 @@
-package com.fmpwizard.code
-package snippet
+package com.fmpwizard.code.snippet
 
 /*
  * Copyright 2007-2010 WorldWide Conferencing, LLC
