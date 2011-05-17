@@ -17,8 +17,9 @@ package snippet
  * limitations under the License.
  */
 
-import _root_.scala.xml._
-import _root_.net.liftweb._
+import scala.xml._
+import net.liftweb._
+import actor._
 import http._
 import S._
 import SHtml._
@@ -29,19 +30,24 @@ import js._
 import JsCmds._
 import js.jquery._
 
+import comet._
+import comet.MyListeners._
+import lib._
+
 class Liftactorform extends Logger{
 
-  var state= CitiesAndStates2.state
-  var city= ""
+  var state= CitiesAndStates4.state
+  var city= CitiesAndStates4.city
 
 
   def stateDropDown = SHtml.ajaxSelect(
-                  CitiesAndStates2.states.map(i => (i, i)),
+                  CitiesAndStates4.states.map(i => (i, i)),
                   Full(1.toString),
                   selected => {
                     //What to do when you select an entry
                     Info.selectedState.set(selected)
                     state= selected
+                    city= CitiesAndStates4.citiesFor(state).head
                     Noop
                   }
                   )
@@ -60,7 +66,7 @@ class Liftactorform extends Logger{
    * Generate the City drop down menu
    */
   private def cityChoice(state: String): Elem = {
-    val cities = CitiesAndStates2.citiesFor(state)
+    val cities = CitiesAndStates4.citiesFor(state)
         val first = cities.head
         SHtml.ajaxSelect(
                           cities.map(i => (i, i)),
@@ -79,13 +85,20 @@ class Liftactorform extends Logger{
 
   // bind the view to the dynamic HTML
   def show(xhtml: Group): NodeSeq = {
+    info("sss %s".format(cometName.is))
+    val diego= cometName.is.openOr("1")
+    info("sss %s".format(diego))
     bind("select", xhtml,
          "city" -> cityChoice(state) % ("id" -> "city_select"),
          "submit" -> submit(?("Save"),
                             () =>
-                            {S.notice("City: "+ city +
-                              " State: "+ state);
-                             redirectTo("/")}))
+                            {
+                              S.notice("Wait 5 seconds and you will see some magic.")
+                              val workerLiftActor = new WorkerLiftActor
+                              workerLiftActor ! DoneMessage(
+                                diego , city, state
+                              )
+                            }))
   }
 }
 
@@ -357,5 +370,7 @@ object CitiesAndStates4 extends Logger {
   val state: String = states.head
 
   def citiesFor(state: String): List[String] = citiesAndStates.filter(_._1 == state).map(_._2)
+
+  val city: String= citiesFor(state).head
 
 }
