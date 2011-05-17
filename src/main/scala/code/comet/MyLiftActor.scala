@@ -44,7 +44,7 @@ class Myliftactor extends CometActor with Logger {
    * On page load, this method does a full page render
    */
   def render= {
-    "#result *" #> "5 seconds after you submit this form, you will see a new message here."
+    "#result *" #> "5 seconds after you submit, you will see a new message here."
 
   }
 
