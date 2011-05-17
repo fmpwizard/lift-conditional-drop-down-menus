@@ -10,7 +10,6 @@ import sitemap._
 import Loc._
 import mapper._
 
-//import code.model._
 
 
 /**
@@ -47,10 +46,14 @@ class Boot {
       Menu.i("Wiring") / "wiring",
       Menu.i("Wiring2") / "wiring2",
       Menu.i("Invoice") / "invoice_wiring",
+      Menu.i("LiftActor") / "liftactorform" submenus (
+        Menu.i("LiftActor In Action") / "myliftactor" >> Hidden
+        )
+      ,
 
       // more complex because this menu allows anything in the
       // /static path to be visible
-      Menu(Loc("Static", Link(List("static"), true, "/static/index"), 
+      Menu(Loc("Static", Link(List("static"), true, "/static/index"),
 	       "Static Content")))
 
 

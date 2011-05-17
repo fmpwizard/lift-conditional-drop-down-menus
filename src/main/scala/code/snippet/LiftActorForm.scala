@@ -17,8 +17,9 @@ package snippet
  * limitations under the License.
  */
 
-import _root_.scala.xml._
-import _root_.net.liftweb._
+import scala.xml._
+import net.liftweb._
+import actor._
 import http._
 import S._
 import SHtml._
@@ -29,19 +30,24 @@ import js._
 import JsCmds._
 import js.jquery._
 
-class Wiring2 extends Logger{
+import comet._
+import comet.MyListeners._
+import lib._
 
-  var state= CitiesAndStates2.state
-  var city= ""
-  var id= "1"
+class Liftactorform extends Logger{
+
+  var state= CitiesAndStates4.state
+  var city= CitiesAndStates4.city
+
 
   def stateDropDown = SHtml.ajaxSelect(
-                  CitiesAndStates2.states.map(i => (i, i)),
+                  CitiesAndStates4.states.map(i => (i, i)),
                   Full(1.toString),
                   selected => {
                     //What to do when you select an entry
                     Info.selectedState.set(selected)
                     state= selected
+                    city= CitiesAndStates4.citiesFor(state).head
                     Noop
                   }
                   )
@@ -49,61 +55,54 @@ class Wiring2 extends Logger{
   def cityDropDown(in: NodeSeq) =
     WiringUI.toNode(in, Info.cities, JqWiringSupport.fade)((d, ns) => cityChoice(state))
 
-  def idDropDown(in: NodeSeq) =
-    WiringUI.toNode(in, Info.ids, JqWiringSupport.fade)((d, ns) => idChoice(Info.cityValueCell.get))
 
   private object Info {
     val selectedState= ValueCell(state)
     //you cannot do Info.cities.set(new value), so we add a new val
-    val cityValueCell= ValueCell("a")
+    val cityValueCell= ValueCell("")
     val cities= selectedState.lift(_ + "")
-    val ids= cityValueCell.lift(_ + "")
   }
   /**
    * Generate the City drop down menu
    */
   private def cityChoice(state: String): Elem = {
-    val cities = CitiesAndStates2.citiesFor(state)
+    val cities = CitiesAndStates4.citiesFor(state)
         val first = cities.head
         SHtml.ajaxSelect(
                           cities.map(i => (i, i)),
                           Full(1.toString),
                           selected => {
                             //What to do when you select an entry
-                            //info("Previous value is: %s".format(Info.x.get))
-                            //subcategory= selected
                             Info.cityValueCell.set(selected)
-                            //info("Current value is: %s".format(Info.x.get))
-                            //subcategory= selected
+                            city= selected
                             Noop
  
                           }
                         )
   }
 
-  private def idChoice(state: String): Elem = {
-    info("idChoice called with: %s".format(state))
-    val ids = CitiesAndStates2.idsFor(state)
-    val first = ids.headOption
-    // make the select "untrusted" because we might put new values
-    // in the select
-    untrustedSelect(ids.map(s => (s,s)), first, s => id = s)
-  }
-
 
 
   // bind the view to the dynamic HTML
   def show(xhtml: Group): NodeSeq = {
+    info("sss %s".format(cometName.is))
+    val diego= cometName.is.openOr("1")
+    info("sss %s".format(diego))
     bind("select", xhtml,
          "city" -> cityChoice(state) % ("id" -> "city_select"),
          "submit" -> submit(?("Save"),
                             () =>
-                            {S.notice("City: "+city+" State: "+state);
-                             redirectTo("/")}))
+                            {
+                              S.notice("Wait 5 seconds and you will see some magic.")
+                              val workerLiftActor = new WorkerLiftActor
+                              workerLiftActor ! DoneMessage(
+                                diego , city, state
+                              )
+                            }))
   }
 }
 
-object CitiesAndStates2 extends Logger {
+object CitiesAndStates4 extends Logger {
   val citiesAndStates = List("Alabama" -> "Birmingham",
                              "Alabama" -> "Huntsville",
                              "Alabama" -> "Mobile",
@@ -364,77 +363,6 @@ object CitiesAndStates2 extends Logger {
                              "Wisconsin" -> "Milwaukee")
 
 
-  val idsAndStates =    List(
-                             "Birmingham" -> "1",
-                             "Huntsville" -> "2",
-                             "Mobile" -> "3",
-                             "Montgomery" -> "4",
-                             "Anchorage municipality" -> "5",
-                             "Chandler" -> "6",
-                             "Gilbert town" -> "7",
-                             "Arizona" -> "Glendale",
-                             "Arizona" -> "Mesa",
-                             "Arizona" -> "Peoria",
-                             "Arizona" -> "Phoenix",
-                             "Arizona" -> "Scottsdale",
-                             "Arizona" -> "Tempe",
-                             "Arizona" -> "Tucson",
-                             "Arkansas" -> "Little Rock",
-                             "California" -> "Anaheim",
-                             "California" -> "Antioch",
-                             "California" -> "Bakersfield",
-                             "California" -> "Berkeley",
-                             "California" -> "Burbank",
-                             "California" -> "Chula Vista",
-                             "California" -> "Concord",
-                             "California" -> "Corona",
-                             "California" -> "Costa Mesa",
-                             "California" -> "Daly City",
-                             "California" -> "Downey",
-                             "California" -> "El Monte",
-                             "California" -> "Elk Grove",
-                             "California" -> "Escondido",
-                             "California" -> "Fairfield",
-                             "California" -> "Fontana",
-                             "California" -> "Fremont",
-                             "California" -> "Fresno",
-                             "California" -> "Fullerton",
-                             "California" -> "Garden Grove",
-                             "California" -> "Glendale",
-                             "California" -> "Hayward",
-                             "California" -> "Huntington Beach",
-                             "California" -> "Inglewood",
-                             "California" -> "Irvine",
-                             "California" -> "Lancaster",
-                             "California" -> "Long Beach",
-                             "California" -> "Los Angeles",
-                             "California" -> "Modesto",
-                             "California" -> "Moreno Valley",
-                             "California" -> "Norwalk",
-                             "California" -> "Oakland",
-                             "California" -> "Oceanside",
-                             "California" -> "Ontario",
-                             "California" -> "Orange",
-                             "California" -> "Oxnard",
-                             "California" -> "Palmdale",
-                             "California" -> "Pasadena",
-                             "California" -> "Pomona",
-                             "California" -> "Rancho Cucamonga",
-                             "California" -> "Richmond",
-                             "California" -> "Riverside",
-                             "California" -> "Roseville",
-                             "California" -> "Sacramento",
-                             "California" -> "Salinas",
-                             "California" -> "San Bernardino",
-                             "California" -> "San Buenaventura (Ventura)",
-                             "California" -> "San Diego",
-                             "California" -> "San Francisco",
-                             "California" -> "San Jose",
-                             "California" -> "Santa Ana",
-                             "California" -> "Santa Clara",
-                             "California" -> "Santa Clarita",
-                             "California" -> "Santa Rosa"
-  )
 
 
   val states = citiesAndStates.map(_._1).distinct
@@ -442,8 +370,7 @@ object CitiesAndStates2 extends Logger {
   val state: String = states.head
 
   def citiesFor(state: String): List[String] = citiesAndStates.filter(_._1 == state).map(_._2)
-  def idsFor(state: String): List[String] = {
-    info("State is :%s".format(state))
-    idsAndStates.filter(_._1 == state).map(_._2)
-  }
+
+  val city: String= citiesFor(state).head
+
 }

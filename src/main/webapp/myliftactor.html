@@ -1,0 +1,11 @@
+<lift:surround with="default" at="content">
+  <div class="lift:PlaceCometOnPage"></div>
+  <center><b>lift Actor in action</b></center>
+  <br >
+  Choose city and state:<br>
+  <lift:snippet type="Liftactorform:show" form="post">
+    <div>State: <input class="lift:Liftactorform.stateDropDown"></div>
+    <div>City: <span class="lift:Liftactorform.cityDropDown">Tax</span></div>
+    <select:submit></select:submit>
+  </lift:snippet>
+</lift:surround>
