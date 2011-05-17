@@ -49,8 +49,10 @@ class reactiveweb extends Logger{
   val selectedCitySignal: Signal[Option[String]] = for{
     cities <- validCitiesSignal
     i <- citiesSelect.selectedIndex.value
-  } yield  if(cities.size <= i.getOrElse(0)){ citiesSelect.selectedIndex.value ()= Some(0); Some(0) map cities} else {   i map cities } 
-  //} yield i map cities
+    //i <- 0
+  //} yield {println("Diegoooooooooooo "  + cities.size +  " sss " + cities); if(cities.size <= i.getOrElse(0)){println("qqqqqq"); Some(0) map cities} else{   i map cities} }
+  //} yield  if(cities.size <= i.getOrElse(0)){ Some(0) map cities} else{   i map cities } 
+  } yield i map cities
 
   val validIdsSignal = selectedCitySignal.map(_.toList flatMap CitiesAndStates3.idsFor)
   val idsSelect = Select(validIdsSignal)
