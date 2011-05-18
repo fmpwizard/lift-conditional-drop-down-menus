@@ -1,0 +1,6 @@
+.scala~
+project/boot/
+lib_managed/
+src/test/
+target/
+\.keep
