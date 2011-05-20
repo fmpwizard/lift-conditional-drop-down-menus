@@ -12,7 +12,7 @@ import Helpers._
 import common.{Full, Logger, Box, Empty, Failure}
 
 
-object cometName extends SessionVar[Box[String]](Empty)
+object cometName extends RequestVar[Box[String]](Empty)
 
 /**
   * This object adds a ComeActor of type Myliftactor with a name == random string

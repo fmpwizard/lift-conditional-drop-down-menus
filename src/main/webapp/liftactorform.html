@@ -6,11 +6,12 @@
   </div>
   <br >
   Choose city and state:<br>
-  <lift:snippet type="Liftactorform:show" form="post">
+  <lift:snippet type="Liftactorform:render" form="post">
     <span id="xyz" cometname="default"></span>
     <div>State: <input class="lift:Liftactorform.stateDropDown"></div>
     <div>City: <span class="lift:Liftactorform.cityDropDown">City</span></div>
-    <select:submit></select:submit>
+    <input type="hidden" value="sshhhh!"/>
+    <input type="submit" value="Let that actor work!"/>
   </lift:snippet>
   <br>
   <p>This example shows you how after you submit a form, you can fire up

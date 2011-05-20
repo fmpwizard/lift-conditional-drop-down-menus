@@ -7,7 +7,8 @@
     </appender>
 
     <logger name="com.fmpwizard.code.snippet" level="info"/>
-    <logger name="com.fmpwizard.code" level="info"/>
+    <logger name="com.fmpwizard.code.snippet.PlaceCometOnPage" level="error"/>
+    <logger name="com.fmpwizard.code" level="error"/>
     <root level="error">
         <appender-ref ref="STDOUT" />
     </root>

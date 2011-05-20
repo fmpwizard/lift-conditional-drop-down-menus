@@ -30,14 +30,29 @@ import js._
 import JsCmds._
 import js.jquery._
 
+
+
 import comet._
 import comet.MyListeners._
 import lib._
+import cometName._
+
+
 
 class Liftactorform extends Logger{
 
   var state= CitiesAndStates4.state
-  var city= CitiesAndStates4.city
+  var city= {
+    info("Setting city to: %s".format(CitiesAndStates4.city))
+    CitiesAndStates4.city
+  }
+
+  private object Info {
+    val selectedState= ValueCell(state)
+    //you cannot do Info.cities.set(new value), so we add a new val
+    val cityValueCell= ValueCell(city)
+    val cities= selectedState.lift(_ + "")
+  }
 
 
   def stateDropDown = SHtml.ajaxSelect(
@@ -48,58 +63,56 @@ class Liftactorform extends Logger{
                     Info.selectedState.set(selected)
                     state= selected
                     city= CitiesAndStates4.citiesFor(state).head
+                    info("State drop down selected: %s".format(state))
                     Noop
                   }
                   )
 
+
   def cityDropDown(in: NodeSeq) =
     WiringUI.toNode(in, Info.cities, JqWiringSupport.fade)((d, ns) => cityChoice(state))
 
-
-  private object Info {
-    val selectedState= ValueCell(state)
-    //you cannot do Info.cities.set(new value), so we add a new val
-    val cityValueCell= ValueCell("")
-    val cities= selectedState.lift(_ + "")
-  }
   /**
    * Generate the City drop down menu
    */
   private def cityChoice(state: String): Elem = {
     val cities = CitiesAndStates4.citiesFor(state)
-        val first = cities.head
-        SHtml.ajaxSelect(
-                          cities.map(i => (i, i)),
-                          Full(1.toString),
-                          selected => {
-                            //What to do when you select an entry
-                            Info.cityValueCell.set(selected)
-                            city= selected
-                            Noop
- 
-                          }
-                        )
+    info("Calling cityChoice(%s)!".format(state))
+    SHtml.ajaxSelect(
+      cities.map(i => (i, i)),
+      Full(1.toString),
+      selected => {
+        //What to do when you select an entry
+        Info.cityValueCell.set(selected)
+        city= selected
+        info("Selected city is %s".format(city))
+        Noop
+
+      }
+    )
   }
 
 
 
-  // bind the view to the dynamic HTML
-  def show(xhtml: Group): NodeSeq = {
-    info("sss %s".format(cometName.is))
-    val diego= cometName.is.openOr("1")
-    info("sss %s".format(diego))
-    bind("select", xhtml,
-         "city" -> cityChoice(state) % ("id" -> "city_select"),
-         "submit" -> submit(?("Save"),
-                            () =>
-                            {
-                              S.notice("Wait 5 seconds and you will see some magic.")
-                              val workerLiftActor = new WorkerLiftActor
-                              workerLiftActor ! DoneMessage(
-                                diego , city, state
-                              )
-                            }))
+  def render ={
+
+    def snapshot(): () => Unit = {
+      val cn = cometName.get
+      () => {cometName.set(cn)}
+    }
+
+    def process() {
+      S.notice("Wait 5 seconds and you will see some magic.")
+      val workerLiftActor = new WorkerLiftActor
+      val cometActorName= cometName.is.openOr("1")
+      workerLiftActor ! DoneMessage(cometActorName , city, state)
+    }
+
+    "type=hidden" #> SHtml.hidden(snapshot()) &
+    "type=submit" #> SHtml.onSubmitUnit(process)
+
   }
+
 }
 
 object CitiesAndStates4 extends Logger {
